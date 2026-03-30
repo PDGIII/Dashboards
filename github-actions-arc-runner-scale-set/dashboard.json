@@ -60,16 +60,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": null
               },
               {
-                "color": "yellow",
+                "color": "green",
                 "value": 1
-              },
-              {
-                "color": "red",
-                "value": 3
               }
             ]
           },
@@ -85,7 +81,7 @@
       "id": 1,
       "options": {
         "colorMode": "background",
-        "graphMode": "none",
+        "graphMode": "area",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -100,7 +96,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_registered_runners{job=~\"arc-controller|arc-listeners\"}",
+          "expr": "sum(gha_registered_runners{job=\"arc-listeners\"})",
           "legendFormat": "registered",
           "refId": "A"
         }
@@ -137,7 +133,7 @@
       "id": 2,
       "options": {
         "colorMode": "background",
-        "graphMode": "none",
+        "graphMode": "area",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -152,7 +148,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_busy_runners{job=~\"arc-controller|arc-listeners\"}",
+          "expr": "sum(gha_busy_runners{job=\"arc-listeners\"})",
           "legendFormat": "busy",
           "refId": "A"
         }
@@ -189,7 +185,7 @@
       "id": 3,
       "options": {
         "colorMode": "background",
-        "graphMode": "none",
+        "graphMode": "area",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -204,7 +200,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_idle_runners{job=~\"arc-controller|arc-listeners\"}",
+          "expr": "sum(gha_idle_runners{job=\"arc-listeners\"})",
           "legendFormat": "idle",
           "refId": "A"
         }
@@ -218,22 +214,15 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "fixed",
+            "fixedColor": "blue"
           },
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "blue",
                 "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 1
-              },
-              {
-                "color": "red",
-                "value": 3
               }
             ]
           },
@@ -249,7 +238,7 @@
       "id": 4,
       "options": {
         "colorMode": "background",
-        "graphMode": "none",
+        "graphMode": "area",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -264,7 +253,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_desired_runners{job=~\"arc-controller|arc-listeners\"}",
+          "expr": "sum(gha_desired_runners{job=\"arc-listeners\"})",
           "legendFormat": "desired",
           "refId": "A"
         }
@@ -301,7 +290,7 @@
       "id": 5,
       "options": {
         "colorMode": "value",
-        "graphMode": "none",
+        "graphMode": "area",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -316,7 +305,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_min_runners{job=~\"arc-controller|arc-listeners\"}",
+          "expr": "sum(gha_min_runners{job=\"arc-listeners\"})",
           "legendFormat": "min",
           "refId": "A"
         },
@@ -325,7 +314,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_max_runners{job=~\"arc-controller|arc-listeners\"}",
+          "expr": "sum(gha_max_runners{job=\"arc-listeners\"})",
           "legendFormat": "max",
           "refId": "B"
         }
@@ -374,7 +363,7 @@
           "mode": "multi"
         }
       },
-      "title": "Runner Pool — Registered / Busy / Idle",
+      "title": "Runner Pool \u2014 Registered / Busy / Idle",
       "type": "timeseries",
       "targets": [
         {
@@ -382,8 +371,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_registered_runners{job=~\"arc-controller|arc-listeners\"}",
-          "legendFormat": "registered",
+          "expr": "sum by (runner_scale_set_name)(gha_registered_runners{job=\"arc-listeners\"})",
+          "legendFormat": "{{runner_scale_set_name}} \u2014 registered",
           "refId": "A"
         },
         {
@@ -391,8 +380,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_busy_runners{job=~\"arc-controller|arc-listeners\"}",
-          "legendFormat": "busy",
+          "expr": "sum by (runner_scale_set_name)(gha_busy_runners{job=\"arc-listeners\"})",
+          "legendFormat": "{{runner_scale_set_name}} \u2014 busy",
           "refId": "B"
         },
         {
@@ -400,8 +389,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_idle_runners{job=~\"arc-controller|arc-listeners\"}",
-          "legendFormat": "idle",
+          "expr": "sum by (runner_scale_set_name)(gha_idle_runners{job=\"arc-listeners\"})",
+          "legendFormat": "{{runner_scale_set_name}} \u2014 idle",
           "refId": "C"
         }
       ]
@@ -426,7 +415,53 @@
           },
           "min": 0,
           "unit": "short"
-        }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".* \u2014 min"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    6,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".* \u2014 max"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    6,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -448,7 +483,7 @@
           "mode": "multi"
         }
       },
-      "title": "Autoscaler — Desired vs Bounds",
+      "title": "Autoscaler \u2014 Desired vs Bounds",
       "type": "timeseries",
       "targets": [
         {
@@ -456,8 +491,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_desired_runners{job=~\"arc-controller|arc-listeners\"}",
-          "legendFormat": "desired",
+          "expr": "sum by (runner_scale_set_name)(gha_desired_runners{job=\"arc-listeners\"})",
+          "legendFormat": "{{runner_scale_set_name}} \u2014 desired",
           "refId": "A"
         },
         {
@@ -465,8 +500,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_min_runners{job=~\"arc-controller|arc-listeners\"}",
-          "legendFormat": "min",
+          "expr": "sum by (runner_scale_set_name)(gha_min_runners{job=\"arc-listeners\"})",
+          "legendFormat": "{{runner_scale_set_name}} \u2014 min",
           "refId": "B"
         },
         {
@@ -474,8 +509,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_max_runners{job=~\"arc-controller|arc-listeners\"}",
-          "legendFormat": "max",
+          "expr": "sum by (runner_scale_set_name)(gha_max_runners{job=\"arc-listeners\"})",
+          "legendFormat": "{{runner_scale_set_name}} \u2014 max",
           "refId": "C"
         }
       ]
@@ -538,7 +573,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_assigned_jobs{job=~\"arc-controller|arc-listeners\"}",
+          "expr": "sum(gha_assigned_jobs{job=\"arc-listeners\"})",
           "legendFormat": "assigned",
           "refId": "A"
         }
@@ -590,7 +625,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_started_jobs_total{job=~\"arc-controller|arc-listeners\"}",
+          "expr": "sum(gha_started_jobs_total{job=\"arc-listeners\"})",
           "legendFormat": "started",
           "refId": "A"
         }
@@ -642,7 +677,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_completed_jobs_total{job=~\"arc-controller|arc-listeners\"}",
+          "expr": "sum(gha_completed_jobs_total{job=\"arc-listeners\"})",
           "legendFormat": "completed",
           "refId": "A"
         }
@@ -687,7 +722,7 @@
       "id": 9,
       "options": {
         "colorMode": "background",
-        "graphMode": "none",
+        "graphMode": "area",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -702,7 +737,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_running_jobs{job=~\"arc-controller|arc-listeners\"}",
+          "expr": "sum(gha_running_jobs{job=\"arc-listeners\"})",
           "legendFormat": "running",
           "refId": "A"
         }
@@ -727,8 +762,40 @@
             "showPoints": "never"
           },
           "min": 0,
-          "unit": "short"
-        }
+          "unit": "ops"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".* \u2014 assigned.*"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "queued (count)"
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    8,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -759,8 +826,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "gha_assigned_jobs{job=~\"arc-controller|arc-listeners\"}",
-          "legendFormat": "assigned (current)",
+          "expr": "sum by (runner_scale_set_name)(gha_assigned_jobs{job=\"arc-listeners\"})",
+          "legendFormat": "{{runner_scale_set_name}} \u2014 assigned (queued)",
           "refId": "A"
         },
         {
@@ -768,8 +835,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "rate(gha_started_jobs_total{job=~\"arc-controller|arc-listeners\"}[5m]) * 60",
-          "legendFormat": "started/min",
+          "expr": "sum by (runner_scale_set_name)(rate(gha_started_jobs_total{job=\"arc-listeners\"}[5m])) * 60",
+          "legendFormat": "{{runner_scale_set_name}} \u2014 started/min",
           "refId": "B"
         },
         {
@@ -777,8 +844,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "rate(gha_completed_jobs_total{job=~\"arc-controller|arc-listeners\"}[5m]) * 60",
-          "legendFormat": "completed/min",
+          "expr": "sum by (runner_scale_set_name)(rate(gha_completed_jobs_total{job=\"arc-listeners\"}[5m])) * 60",
+          "legendFormat": "{{runner_scale_set_name}} \u2014 completed/min",
           "refId": "C"
         }
       ]
@@ -834,7 +901,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.50, increase(gha_job_startup_duration_seconds_bucket{job=~\"arc-controller|arc-listeners\"}[1h]))",
+          "expr": "histogram_quantile(0.50, sum by (le)(rate(gha_job_startup_duration_seconds_bucket{job=\"arc-listeners\"}[5m])))",
           "legendFormat": "startup p50",
           "refId": "A"
         },
@@ -843,7 +910,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.95, increase(gha_job_startup_duration_seconds_bucket{job=~\"arc-controller|arc-listeners\"}[1h]))",
+          "expr": "histogram_quantile(0.95, sum by (le)(rate(gha_job_startup_duration_seconds_bucket{job=\"arc-listeners\"}[5m])))",
           "legendFormat": "startup p95",
           "refId": "B"
         },
@@ -852,7 +919,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.50, increase(gha_job_execution_duration_seconds_bucket{job=~\"arc-controller|arc-listeners\"}[1h]))",
+          "expr": "histogram_quantile(0.50, sum by (le)(rate(gha_job_execution_duration_seconds_bucket{job=\"arc-listeners\"}[5m])))",
           "legendFormat": "execution p50",
           "refId": "C"
         },
@@ -861,7 +928,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.95, increase(gha_job_execution_duration_seconds_bucket{job=~\"arc-controller|arc-listeners\"}[1h]))",
+          "expr": "histogram_quantile(0.95, sum by (le)(rate(gha_job_execution_duration_seconds_bucket{job=\"arc-listeners\"}[5m])))",
           "legendFormat": "execution p95",
           "refId": "D"
         }
@@ -899,7 +966,28 @@
           },
           "min": 0,
           "unit": "ops"
-        }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".* \u2014 error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 10
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -930,66 +1018,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "rate(controller_runtime_reconcile_total{job=\"arc-controller\"}[5m])",
-          "legendFormat": "{{controller}} — {{result}}",
-          "refId": "A"
-        }
-      ]
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "red",
-            "mode": "fixed"
-          },
-          "custom": {
-            "drawStyle": "line",
-            "fillOpacity": 25,
-            "gradientMode": "opacity",
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "showPoints": "never"
-          },
-          "min": 0,
-          "unit": "ops"
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 27
-      },
-      "id": 31,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi"
-        }
-      },
-      "title": "Reconcile Errors",
-      "type": "timeseries",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "expr": "rate(controller_runtime_reconcile_total{job=\"arc-controller\",result=\"error\"}[5m])",
-          "legendFormat": "{{controller}} errors",
+          "expr": "sum by (controller, result)(rate(controller_runtime_reconcile_total{job=\"arc-controller\"}[5m]))",
+          "legendFormat": "{{controller}} \u2014 {{result}}",
           "refId": "A"
         }
       ]
@@ -1045,8 +1075,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.50, rate(controller_runtime_reconcile_time_seconds_bucket{job=\"arc-controller\"}[5m]))",
-          "legendFormat": "p50 — {{controller}}",
+          "expr": "histogram_quantile(0.50, sum by (le)(rate(controller_runtime_reconcile_time_seconds_bucket{job=\"arc-controller\"}[5m])))",
+          "legendFormat": "p50 \u2014 {{controller}}",
           "refId": "A"
         },
         {
@@ -1054,8 +1084,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.95, rate(controller_runtime_reconcile_time_seconds_bucket{job=\"arc-controller\"}[5m]))",
-          "legendFormat": "p95 — {{controller}}",
+          "expr": "histogram_quantile(0.95, sum by (le)(rate(controller_runtime_reconcile_time_seconds_bucket{job=\"arc-controller\"}[5m])))",
+          "legendFormat": "p95 \u2014 {{controller}}",
           "refId": "B"
         }
       ]
@@ -1111,8 +1141,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "controller_runtime_active_workers{job=\"arc-controller\"}",
-          "legendFormat": "active workers — {{controller}}",
+          "expr": "sum by (controller)(controller_runtime_active_workers{job=\"arc-controller\"})",
+          "legendFormat": "active workers \u2014 {{controller}}",
           "refId": "A"
         },
         {
@@ -1120,8 +1150,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "workqueue_depth{job=\"arc-controller\"}",
-          "legendFormat": "queue depth — {{name}}",
+          "expr": "sum by (name)(workqueue_depth{job=\"arc-controller\"})",
+          "legendFormat": "queue depth \u2014 {{name}}",
           "refId": "B"
         }
       ]
