@@ -214,14 +214,13 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "fixed",
-            "fixedColor": "blue"
+            "mode": "thresholds"
           },
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "blue",
+                "color": "green",
                 "value": null
               }
             ]
@@ -991,7 +990,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 24,
         "x": 0,
         "y": 27
       },
@@ -1075,7 +1074,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.50, sum by (le)(rate(controller_runtime_reconcile_time_seconds_bucket{job=\"arc-controller\"}[5m])))",
+          "expr": "histogram_quantile(0.50, sum by (le, controller)(rate(controller_runtime_reconcile_time_seconds_bucket{job=\"arc-controller\"}[5m])))",
           "legendFormat": "p50 \u2014 {{controller}}",
           "refId": "A"
         },
@@ -1084,7 +1083,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.95, sum by (le)(rate(controller_runtime_reconcile_time_seconds_bucket{job=\"arc-controller\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le, controller)(rate(controller_runtime_reconcile_time_seconds_bucket{job=\"arc-controller\"}[5m])))",
           "legendFormat": "p95 \u2014 {{controller}}",
           "refId": "B"
         }
