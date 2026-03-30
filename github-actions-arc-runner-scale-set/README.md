@@ -4,6 +4,12 @@ Monitors the GitHub Actions Runner Scale Set Controller (ARC) running on Kuberne
 
 **Grafana.com:** https://grafana.com/grafana/dashboards/25015-github-actions-arc-runner-scale-set/
 
+## Screenshots
+
+![Runner Pool](screenshots/Runner_Pool.png)
+![Job Throughput](screenshots/Job_Throughput.png)
+![Controller Health](screenshots/Controller_Health.png)
+
 ## Requirements
 
 | Dependency | Version |
