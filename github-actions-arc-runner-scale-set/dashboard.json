@@ -148,7 +148,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(gha_busy_runners{job=\"arc-listeners\"})",
+          "expr": "sum(gha_running_jobs{job=\"arc-listeners\"})",
           "legendFormat": "busy",
           "refId": "A"
         }
@@ -200,7 +200,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(gha_idle_runners{job=\"arc-listeners\"})",
+          "expr": "clamp_min(sum(gha_desired_runners{job=\"arc-listeners\"}) - sum(gha_running_jobs{job=\"arc-listeners\"}), 0)",
           "legendFormat": "idle",
           "refId": "A"
         }
@@ -379,7 +379,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum by (runner_scale_set_name)(gha_busy_runners{job=\"arc-listeners\"})",
+          "expr": "sum by (runner_scale_set_name)(gha_running_jobs{job=\"arc-listeners\"})",
           "legendFormat": "{{runner_scale_set_name}} \u2014 busy",
           "refId": "B"
         },
@@ -388,7 +388,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum by (runner_scale_set_name)(gha_idle_runners{job=\"arc-listeners\"})",
+          "expr": "clamp_min(sum by (runner_scale_set_name)(gha_desired_runners{job=\"arc-listeners\"}) - sum by (runner_scale_set_name)(gha_running_jobs{job=\"arc-listeners\"}), 0)",
           "legendFormat": "{{runner_scale_set_name}} \u2014 idle",
           "refId": "C"
         }
