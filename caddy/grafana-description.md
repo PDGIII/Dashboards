@@ -1,3 +1,5 @@
+# Caddy - Standalone Reverse Proxy
+
 Monitors a standalone Caddy reverse proxy using Caddy's built-in Prometheus metrics — no exporter sidecar required.
 
 ## Panels
@@ -17,3 +19,7 @@ Monitors a standalone Caddy reverse proxy using Caddy's built-in Prometheus metr
 ## Notes
 
 This dashboard is designed for **standalone Caddy instances** (not in-cluster Kubernetes deployments). It uses the native `caddy_` metrics exposed by Caddy itself — no third-party exporter needed.
+
+## Source
+
+[PDGIII/Dashboards](https://github.com/PDGIII/Dashboards/tree/main/caddy)
