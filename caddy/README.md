@@ -2,7 +2,7 @@
 
 Monitors a standalone Caddy reverse proxy using Caddy's built-in Prometheus metrics endpoint.
 
-**Grafana.com:** [25216-caddy-standalone-reverse-proxy](https://grafana.com/grafana/dashboards/25216-caddy-standalone-reverse-proxy/)
+**Grafana.com:** [25216-caddy](https://grafana.com/grafana/dashboards/25216-caddy/)
 
 ## Screenshots
 

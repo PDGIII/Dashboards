@@ -4,9 +4,10 @@ Grafana dashboards for homelab monitoring.
 
 ## Dashboards
 
-| Dashboard | Description | Grafana.com |
-|-----------|-------------|-------------|
-| [GitHub Actions ARC - Runner Scale Set](github-actions-arc-runner-scale-set/) | Monitors ARC runner scale sets on Kubernetes | [#25015](https://grafana.com/grafana/dashboards/25015-github-actions-arc-runner-scale-set/) |
+| Dashboard                                                                     | Description                                                      | Grafana.com                                                                                          |
+|-------------------------------------------------------------------------------|------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
+| [GitHub Actions ARC - Runner Scale Set](github-actions-arc-runner-scale-set/) | Monitors ARC runner scale sets on Kubernetes                     | [#25015](https://grafana.com/grafana/dashboards/25015-github-actions-arc-runner-scale-set/)          |
+| [Caddy - Standalone Reverse Proxy](caddy/)                                    | Monitors a standalone Caddy reverse proxy via Prometheus metrics | [#25216](https://grafana.com/grafana/dashboards/25216-caddy/)                                        |
 
 ## Import
 
